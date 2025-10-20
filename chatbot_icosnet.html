@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icosnet - Chatbot Intégré</title>
+  <link rel="icon" type="image/png" href="https://play-lh.googleusercontent.com/VWYp0zMWutHu_m2ovIaFZSJWbWpSu6oRVIgAbicNHhloDkFhL8GkI5Q1fe1G8Lr3Ww">
+
+  <!-- Importation de la police Montserrat Bold -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+      color: #004d56;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 60px;
+      box-shadow: 0 2px 10px rgba(0, 188, 212, 0.3);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header img {
+      height: 45px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #b2ebf2;
+    }
+
+    /* === PAGE 1 : SECTION HERO === */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      background: linear-gradient(135deg, #1868DD, #00BCD4);
+      background-size: 300% 300%;
+      animation: gradientMove 8s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hero h1 {
+      font-size: 70px;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px cyan; transform: translateY(0); }
+      100% { text-shadow: 0 0 30px #00eaff; transform: translateY(-5px); }
+    }
+
+    .emojis {
+      display: flex;
+      gap: 80px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 40px;
+    }
+
+    .emoji {
+      font-size: 70px;
+      color: #00eaff;
+      text-shadow: 0 0 25px cyan;
+      animation: floatEmoji 3s ease-in-out infinite alternate;
+    }
+
+    .emoji:nth-child(1) { animation-delay: 0s; }
+    .emoji:nth-child(2) { animation-delay: 1s; }
+    .emoji:nth-child(3) { animation-delay: 2s; }
+
+    @keyframes floatEmoji {
+      0% { transform: translateY(0); opacity: 0.9; }
+      100% { transform: translateY(-25px); opacity: 1; }
+    }
+
+    /* === PAGE 2 : CHATBOT === */
+    section#chatbot {
+      background: linear-gradient(135deg, #1868DD, #00BCD4);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 60px 20px;
+    }
+
+    h2.section-title {
+      font-size: 36px;
+      color: #ffffff;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      filter: blur(2px);
+      opacity: 0.5;
+    }
+
+    .square {
+      position: absolute;
+      width: 10px;
+      height: 100px;
+      background: #00bcd4;
+      opacity: 0.7;
+      animation: float 6s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(1080deg); opacity: 0; }
+    }
+
+    .monitor {
+      width: 700px;
+      height: 420px;
+      background: linear-gradient(145deg, #ffffff, #d7f3f7);
+      border: 6px solid #00bcd4;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(2, 201, 227, 0.826);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .stand {
+      width: 180px;
+      height: 15px;
+      background: #c5f1f7;
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .base {
+      width: 250px;
+      height: 10px;
+      background: #a7e4ec;
+      border-radius: 20px;
+      margin-top: 5px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(8px);
+      position: relative;
+      padding: 10px 0;
+    }
+
+    .chat-container::before {
+      content: "ICOSNET";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 36px;
+      font-weight: 700;
+      color: rgba(0, 172, 193, 0.25);
+      letter-spacing: 10px;
+      pointer-events: none;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .message {
+      margin: 8px 0;
+      padding: 10px 15px;
+      border-radius: 20px;
+      max-width: 75%;
+      background-color: rgba(0, 188, 212, 0.15);
+      color: #007a8a;
+      border: 1px solid rgba(0, 188, 212, 0.2);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #00acc1, #0099cc);
+      color: white;
+      border: none;
+    }
+
+    .input-area {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      background: rgba(0, 188, 212, 0.1);
+      border-top: 1px solid #00acc1;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 25px;
+      outline: none;
+      background: #e0f7fa;
+      color: #004d56;
+      font-size: 14px;
+      box-shadow: inset 0 0 5px rgba(0, 188, 212, 0.3);
+    }
+
+    .input-area button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #00bcd4, #0099cc);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px rgba(0, 188, 212, 0.4);
+    }
+
+    .input-area button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 188, 212, 0.8);
+    }
+
+    footer {
+      background: #007a8a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 60px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="https://icosnet.com.dz/wp-content/uploads/2022/08/icosnet.svg" alt="Logo Icosnet">
+    <nav>
+      <ul>
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#chatbot">Chatbot</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- PAGE 1 : BIENVENUE -->
+  <section class="hero">
+    <h1>Bienvenue sur ICOSNET</h1>
+    <div class="emojis">
+      <div class="emoji">☁️</div>
+      <div class="emoji">🌐</div>
+      <div class="emoji">🔒</div>
+    </div>
+  </section>
+
+  <!-- PAGE 2 : CHATBOT -->
+  <section id="chatbot">
+    <h2 class="section-title">Assistant virtuel ICOSNET</h2>
+    <div class="background"></div>
+
+    <div class="monitor">
+      <div class="chat-container">
+        <div class="messages">
+          <div class="message bot"> Bonjour ! Je suis votre assistant Icosnet.</div>
+        </div>
+        <div class="input-area">
+          <input type="text" placeholder="Écrire un message..." />
+          <button>Envoyer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stand"></div>
+    <div class="base"></div>
+  </section>
+
+  <footer>
+    © 2025 ICOSNET SPA – Tous droits réservés.
+  </footer>
+
+  <script>
+    const background = document.querySelector('.background');
+    const numSquares = 140;
+    for (let i = 0; i < numSquares; i++) {
+      const square = document.createElement('div');
+      square.classList.add('square');
+      square.style.left = Math.random() * 100 + 'vw';
+      square.style.animationDuration = 3 + Math.random() * 7 + 's';
+      square.style.width = square.style.height = (Math.random() * 5 + 3) + 'px';
+      square.style.background = ['#00bcd4', '#00acc1', '#4dd0e1'][Math.floor(Math.random() * 3)];
+      square.style.animationDelay = Math.random() * 8 + 's';
+      background.appendChild(square);
+    }
+  </script>
+</body>
+</html>
